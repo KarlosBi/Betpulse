@@ -1,0 +1,230 @@
+/*
+ * BetPulse - hoja de estilos principal (CSS plano, sin Vite/Node por ahora).
+ *
+ * Paleta Zafiro / Naranja (regla 60-30-10):
+ *   60% Principal  - Zafiro Profundo #13285A -> fondos, cabecera, tarjetas
+ *   30% Secundario - Blanco Perla    #ECE6DC -> textos, bordes, superficies claras
+ *   10% Acento     - Naranja Brasa   #FF5A12 -> botones, activo, cifras destacadas
+ *
+ * Los demás colores son variaciones de esos tres (más oscuro/claro o con
+ * transparencia), salvo verde/rojo, que solo indican crédito/débito.
+ */
+
+:root {
+    /* Zafiro (60%) */
+    --zafiro: #13285A;
+    --zafiro-900: #0a1633;   /* fondo de página */
+    --zafiro-800: #0f2049;   /* tarjetas sobre fondo */
+    --zafiro-700: #1b3672;   /* hover / bordes */
+
+    /* Perla (30%) */
+    --perla: #ECE6DC;
+    --perla-70: rgba(236, 230, 220, .7);
+    --perla-40: rgba(236, 230, 220, .4);
+    --perla-12: rgba(236, 230, 220, .12);
+
+    /* Naranja (10%) */
+    --naranja: #FF5A12;
+    --naranja-hover: #ff7a40;
+
+    /* Solo semántica de movimientos */
+    --credito: #3ddc97;
+    --debito: #ff6b6b;
+
+    --radius: 10px;
+    --max: 1200px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--perla);
+    background:
+        radial-gradient(1200px 500px at 85% 10%, rgba(255, 90, 18, .10), transparent 60%),
+        radial-gradient(900px 500px at 10% 30%, rgba(27, 54, 114, .9), transparent 70%),
+        var(--zafiro-900);
+    background-attachment: fixed;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.container { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+/* ---------- Botones ---------- */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 7px 16px; border-radius: 999px; border: 1px solid var(--perla-40);
+    background: transparent; color: var(--perla);
+    font: 600 14px/1.2 inherit; font-family: inherit; cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+}
+.btn:hover { border-color: var(--perla); background: var(--perla-12); }
+
+.btn-accent { border-color: var(--naranja); color: var(--naranja); }
+.btn-accent:hover { background: var(--naranja); color: #fff; }
+
+.btn-solid { background: var(--naranja); border-color: var(--naranja); color: #fff; }
+.btn-solid:hover { background: var(--naranja-hover); border-color: var(--naranja-hover); }
+
+.btn-block { width: 100%; padding: 11px; border-radius: 8px; font-size: 15px; }
+
+/* ---------- Cabecera ---------- */
+.topbar {
+    position: sticky; top: 0; z-index: 10;
+    background: linear-gradient(180deg, var(--zafiro) 0%, #102250 100%);
+    border-bottom: 1px solid var(--perla-12);
+}
+.topbar-inner { display: flex; align-items: center; gap: 24px; height: 64px; }
+
+.logo { font-size: 26px; font-weight: 800; letter-spacing: -.5px; color: var(--perla); }
+.logo span { color: var(--naranja); }
+
+.mainnav { display: flex; gap: 28px; margin: 0 auto; height: 100%; }
+.mainnav a {
+    display: flex; align-items: center; height: 100%;
+    font-weight: 600; font-size: 15px; color: var(--perla-70);
+    border-bottom: 3px solid transparent;
+}
+.mainnav a:hover { color: var(--perla); }
+.mainnav a.active { color: var(--naranja); border-bottom-color: var(--naranja); }
+
+.account { display: flex; align-items: center; gap: 10px; }
+.account form { margin: 0; }
+
+.balance-chip {
+    display: inline-flex; flex-direction: column; align-items: flex-end;
+    padding: 4px 12px; border-radius: 8px; background: var(--zafiro-900);
+    border: 1px solid var(--perla-12); line-height: 1.15;
+}
+.balance-chip small { font-size: 11px; color: var(--perla-70); }
+.balance-chip strong { font-size: 15px; color: var(--naranja); font-variant-numeric: tabular-nums; }
+
+/* ---------- Buscador ---------- */
+.search { margin: 16px auto 0; position: relative; }
+.search input {
+    width: 100%; padding: 12px 16px 12px 44px; border-radius: 999px;
+    border: 1px solid var(--perla-12); background: rgba(10, 22, 51, .7);
+    color: var(--perla); font: 600 15px inherit; font-family: inherit;
+}
+.search input::placeholder { color: var(--perla-70); }
+.search input:focus { outline: none; border-color: var(--naranja); }
+.search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
+
+/* ---------- Barra de categorías ---------- */
+.categories {
+    display: flex; justify-content: center; gap: 8px;
+    margin: 18px 0 8px; overflow-x: auto; padding-bottom: 4px;
+}
+.category {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    min-width: 76px; padding: 8px 6px; border-radius: 8px;
+    font-size: 12.5px; font-weight: 600; color: var(--perla-70);
+}
+.category .ico { font-size: 26px; line-height: 1; filter: saturate(1.1); }
+.category:hover { background: var(--perla-12); color: var(--perla); }
+.category.active { color: var(--naranja); }
+
+/* ---------- Banners destacados ---------- */
+.banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 18px 0 8px; }
+.banner {
+    position: relative; overflow: hidden; min-height: 150px;
+    padding: 22px; border-radius: var(--radius); border: 1px solid var(--perla-12);
+}
+.banner .kicker { font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--naranja); text-transform: uppercase; }
+.banner h2 { margin: 8px 0 12px; font-size: 22px; line-height: 1.15; text-transform: uppercase; max-width: 70%; }
+.banner .art { position: absolute; right: 18px; bottom: 6px; font-size: 84px; opacity: .9; }
+.banner-crash { background: linear-gradient(120deg, var(--zafiro) 0%, #1f3f86 55%, #ff5a12 160%); }
+.banner-credits { background: linear-gradient(120deg, #0f2049 0%, #13285A 60%, #26407e 100%); }
+
+/* ---------- Secciones y cuadrícula de juegos ---------- */
+.section-head { display: flex; justify-content: space-between; align-items: center; margin: 28px 0 12px; }
+.section-head h3 { margin: 0; font-size: 18px; }
+
+.games { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.game {
+    position: relative; aspect-ratio: 1; border-radius: var(--radius); overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 12px;
+    border: 1px solid var(--perla-12); transition: transform .15s, border-color .15s;
+}
+.game:hover { transform: translateY(-3px); border-color: var(--naranja); }
+.game .emoji { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 58px; }
+.game .name { font-weight: 800; font-size: 15px; text-shadow: 0 2px 6px rgba(0, 0, 0, .5); }
+.game .tag {
+    position: absolute; top: 8px; left: 8px; padding: 2px 8px; border-radius: 4px;
+    font-size: 10.5px; font-weight: 800; text-transform: uppercase;
+    background: var(--naranja); color: #fff;
+}
+.game .tag.soon { background: var(--perla); color: var(--zafiro); }
+.game.is-soon { cursor: default; }
+.game.is-soon .emoji { filter: grayscale(.25); }
+
+/* Fondos de las fichas (variaciones de la paleta) */
+.g1 { background: linear-gradient(160deg, #ff5a12, #13285A 75%); }
+.g2 { background: linear-gradient(160deg, #26407e, #0a1633); }
+.g3 { background: linear-gradient(160deg, #ECE6DC 0%, #8c93ab 40%, #13285A 90%); }
+.g4 { background: linear-gradient(160deg, #1b3672, #ff5a12 140%); }
+.g5 { background: linear-gradient(160deg, #0f2049, #26407e); }
+.g6 { background: linear-gradient(160deg, #3a4f86, #0a1633); }
+
+.empty-search { display: none; color: var(--perla-70); padding: 24px 0; }
+
+/* ---------- Tarjetas y tablas (wallet) ---------- */
+.card {
+    background: rgba(15, 32, 73, .85); border: 1px solid var(--perla-12);
+    border-radius: var(--radius); padding: 22px; margin-bottom: 18px;
+}
+.card h2, .card h3 { margin-top: 0; }
+
+.wallet-hero { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.wallet-hero .label { color: var(--perla-70); font-size: 14px; }
+.wallet-hero .amount { font-size: 40px; font-weight: 800; color: var(--naranja); font-variant-numeric: tabular-nums; }
+.wallet-hero .note { color: var(--perla-70); font-size: 13px; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+th { text-align: left; color: var(--perla-70); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .5px; }
+th, td { padding: 10px 8px; border-bottom: 1px solid var(--perla-12); white-space: nowrap; }
+td.num, th.num { text-align: right; }
+.credit { color: var(--credito); }
+.debit { color: var(--debito); }
+
+/* ---------- Formularios de acceso ---------- */
+.auth-wrap { display: flex; justify-content: center; padding: 48px 0; }
+.auth-card { width: 100%; max-width: 420px; }
+.auth-card h2 { margin-bottom: 4px; }
+.auth-card .sub { color: var(--perla-70); margin: 0 0 18px; font-size: 14px; }
+label { display: block; margin: 14px 0 6px; font-size: 14px; font-weight: 600; }
+input[type=text], input[type=email], input[type=password] {
+    width: 100%; padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--perla-40); background: var(--zafiro-900);
+    color: var(--perla); font: 15px inherit; font-family: inherit;
+}
+input:focus { outline: none; border-color: var(--naranja); }
+.check { display: flex; align-items: center; gap: 8px; font-weight: 400; }
+.auth-card .alt { text-align: center; margin: 18px 0 0; font-size: 14px; color: var(--perla-70); }
+.auth-card .alt a { color: var(--naranja); font-weight: 600; }
+
+.errors {
+    background: rgba(255, 90, 18, .12); border: 1px solid rgba(255, 90, 18, .5);
+    border-radius: 8px; padding: 10px 14px; margin: 16px 0;
+}
+
+/* ---------- Pie ---------- */
+.footer { margin: 48px 0 24px; text-align: center; font-size: 12.5px; color: var(--perla-40); }
+
+/* ---------- Móvil ---------- */
+@media (max-width: 760px) {
+    .topbar-inner { gap: 12px; }
+    .mainnav { display: none; }
+    .account { margin-left: auto; }
+    .account .user-name { display: none; }
+    .categories { justify-content: flex-start; }
+    .banner h2 { font-size: 18px; max-width: 75%; }
+    .banner .art { font-size: 64px; }
+    .games { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    .wallet-hero .amount { font-size: 32px; }
+}

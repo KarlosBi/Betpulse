@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "BetPulse (Docker)",
+      "Group": "BetPulse",
+      "Host": "db",
+      "Port": 5432,
+      "MaintenanceDB": "betpulse",
+      "Username": "betpulse",
+      "SSLMode": "prefer",
+      "Comment": "PostgreSQL del docker-compose (bases betpulse y betpulse_testing)"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+# BetPulse - entorno de desarrollo
+# Servicios: app (PHP-FPM + Composer), web (Nginx), db (PostgreSQL)
+#
+# Las variables ${...} se leen del .env de Laravel (Docker Compose carga
+# automáticamente el .env de esta carpeta). Los valores tras ":-" son los
+# predeterminados mientras el .env aún no existe.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: betpulse-app
+    container_name: betpulse-app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - betpulse
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: betpulse-web
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - ./:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - betpulse
+
+  db:
+    image: postgres:17-alpine
+    container_name: betpulse-db
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-betpulse}
+      POSTGRES_USER: ${DB_USERNAME:-betpulse}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    ports:
+      # Puerto en el host: 5434 (5433 lo usa otro proyecto local)
+      - "${FORWARD_DB_PORT:-5434}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Crea la base de datos de pruebas (betpulse_testing) en el primer arranque
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-betpulse} -d ${DB_DATABASE:-betpulse}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - betpulse
+
+  pgadmin:
+    image: dpage/pgadmin4:9.8
+    container_name: betpulse-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@betpulse.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "True"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_DISABLE_POSTFIX: "True"
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      # Registra el servidor "BetPulse (Docker)" automáticamente en el primer arranque
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - betpulse
+
+networks:
+  betpulse:
+    driver: bridge
+
+volumes:
+  pgdata:
+  pgadmin-data:
