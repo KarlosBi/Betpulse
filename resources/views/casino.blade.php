@@ -65,7 +65,7 @@
                 <h2>Tu saldo: {{ auth()->user()->wallet?->balance }}</h2>
                 <a href="{{ route('dashboard') }}" class="btn btn-accent">Ver movimientos</a>
             @else
-                <h2>Empieza con 1000 créditos</h2>
+                <h2>Empieza con {{ (int) \App\Services\WalletService::INITIAL_BALANCE }} créditos</h2>
                 <a href="{{ route('register') }}" class="btn btn-solid">Crear cuenta</a>
             @endauth
             <span class="art" aria-hidden="true">🪙</span>

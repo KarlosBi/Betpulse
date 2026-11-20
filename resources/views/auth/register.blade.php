@@ -6,7 +6,7 @@
     <div class="auth-wrap">
         <div class="card auth-card">
             <h2>Crear cuenta</h2>
-            <p class="sub">Empiezas con 1000.0000 créditos recreativos (no es dinero real).</p>
+            <p class="sub">Empiezas con {{ \App\Services\WalletService::INITIAL_BALANCE }} créditos recreativos (no es dinero real).</p>
 
             <form method="POST" action="{{ route('register') }}">
                 @csrf
